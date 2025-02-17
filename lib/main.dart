@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,7 +14,12 @@ Color buttonColor = Color(0xff152F8D);
 Color cardColor = Color(0xff1A254F);
 
 void main() {
-  runApp(TranslatorApp());
+  runApp(
+    DevicePreview(
+      enabled: true,
+      builder: (_) => TranslatorApp(),
+    ),
+  );
 }
 
 class TranslatorApp extends StatelessWidget {
