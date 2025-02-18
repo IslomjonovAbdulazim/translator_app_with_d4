@@ -25,7 +25,6 @@ void main() {
 class TranslatorApp extends StatelessWidget {
   const TranslatorApp({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
