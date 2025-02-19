@@ -185,6 +185,43 @@ class _HomePageState extends State<HomePage> {
               ),
 
               // Input Part
+              SizedBox(height: 20),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: inputCardColor,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        inputLanguage.name,
+                        style: GoogleFonts.barlow(
+                          color: greyTextColor,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Spacer(),
+                          CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {},
+                            child: Image.asset(
+                              "assets/speaker.png",
+                              height: 30,
+                              width: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
               // Output Part
 
