@@ -1,9 +1,11 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_cloud_translation/google_cloud_translation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:translator_app_with_d4/language_model.dart';
 
+String apiKey = "AIzaSyCIyR35pgtP3spCguV6MprjB1W-RSWJWTA";
 Color backgroundColor = Color(0xff141F47);
 Color inputCardColor = Color(0xff1C2D6B);
 Color outputColor = Color(0xff556BBE);
@@ -16,7 +18,7 @@ Color cardColor = Color(0xff1A254F);
 void main() {
   runApp(
     DevicePreview(
-      enabled: true,
+      enabled: false,
       builder: (_) => TranslatorApp(),
     ),
   );
@@ -24,7 +26,6 @@ void main() {
 
 class TranslatorApp extends StatelessWidget {
   const TranslatorApp({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +46,19 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   LanguageModel inputLanguage = languages[0];
   LanguageModel outputLanguage = languages[1];
+  TextEditingController inputController = TextEditingController();
+  FocusNode inputFocus = FocusNode();
+  String output = "";
+  Translation translator = Translation(apiKey: apiKey);
+
+  void perevod() async {
+    TranslationModel tr = await translator.translate(
+      text: inputController.text,
+      to: outputLanguage.code,
+    );
+    output = tr.translatedText;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +69,7 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             children: [
+              // Languages
               Stack(
                 alignment: Alignment.center,
                 children: [
@@ -98,18 +113,35 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         SizedBox(width: 70),
-                        // todo: connect output language
                         Expanded(
-                          child: Text(
-                            "English",
-                            style: GoogleFonts.barlow(
-                              color: whiteColor,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: DropdownButton<LanguageModel>(
+                              dropdownColor: backgroundColor,
+                              borderRadius: BorderRadius.circular(15),
+                              underline: SizedBox.shrink(),
+                              padding: EdgeInsets.zero,
+                              icon: SizedBox.shrink(),
+                              value: outputLanguage,
+                              onChanged: (value) {
+                                if (value == null) return;
+                                outputLanguage = value;
+                                setState(() {});
+                              },
+                              style: GoogleFonts.barlow(
+                                color: whiteColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              items: languages
+                                  .map(
+                                    (lan) => DropdownMenuItem<LanguageModel>(
+                                      value: lan,
+                                      child: Text(lan.name),
+                                    ),
+                                  )
+                                  .toList(),
                             ),
-                            textAlign: TextAlign.end,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
@@ -133,7 +165,15 @@ class _HomePageState extends State<HomePage> {
                       color: buttonColor,
                       padding: EdgeInsets.zero,
                       borderRadius: BorderRadius.circular(100),
-                      onPressed: () {},
+                      onPressed: () {
+                        String input = inputController.text;
+                        inputController.text = output;
+                        output = input;
+                        LanguageModel lan = inputLanguage;
+                        inputLanguage = outputLanguage;
+                        outputLanguage = lan;
+                        setState(() {});
+                      },
                       child: Image.asset(
                         "assets/reverse.png",
                         height: 25,
@@ -143,6 +183,12 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
+
+              // Input Part
+
+              // Output Part
+
+              // Button
             ],
           ),
         ),
