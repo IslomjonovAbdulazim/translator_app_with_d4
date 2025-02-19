@@ -18,7 +18,7 @@ Color cardColor = Color(0xff1A254F);
 void main() {
   runApp(
     DevicePreview(
-      enabled: true,
+      enabled: false,
       builder: (_) => TranslatorApp(),
     ),
   );
@@ -204,6 +204,33 @@ class _HomePageState extends State<HomePage> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
+
+                      Expanded(
+                        child: TextField(
+                          controller: inputController,
+                          focusNode: inputFocus,
+                          onSubmitted: (val) {
+                            perevod();
+                          },
+                          onTapOutside: (val) {
+                            inputFocus.unfocus();
+                            perevod();
+                          },
+                          maxLines: null,
+                          textInputAction: TextInputAction.done,
+                          style: GoogleFonts.barlow(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                          cursorColor: Colors.white,
+                          maxLength: 500,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            counter: SizedBox.shrink(),
+                          ),
+                        ),
+                      ),
+
                       Row(
                         children: [
                           Spacer(),
