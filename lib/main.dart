@@ -18,7 +18,7 @@ Color cardColor = Color(0xff1A254F);
 void main() {
   runApp(
     DevicePreview(
-      enabled: false,
+      enabled: true,
       builder: (_) => TranslatorApp(),
     ),
   );
@@ -183,7 +183,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-
 
               // Input Part
 
