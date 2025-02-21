@@ -1,9 +1,12 @@
+import 'package:clipboard/clipboard.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_cloud_translation/google_cloud_translation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:translator_app_with_d4/language_model.dart';
+import "package:flutter_tts/flutter_tts.dart";
 
 String apiKey = "AIzaSyCIyR35pgtP3spCguV6MprjB1W-RSWJWTA";
 Color backgroundColor = Color(0xff141F47);
@@ -204,7 +207,6 @@ class _HomePageState extends State<HomePage> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-
                       Expanded(
                         child: TextField(
                           controller: inputController,
@@ -230,13 +232,17 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-
                       Row(
                         children: [
                           Spacer(),
                           CupertinoButton(
                             padding: EdgeInsets.zero,
-                            onPressed: () {},
+                            onPressed: () {
+                              FlutterTts tts = FlutterTts();
+                              tts.stop();
+                              tts.setLanguage(inputLanguage.locale);
+                              tts.speak(inputController.text);
+                            },
                             child: Image.asset(
                               "assets/speaker.png",
                               height: 30,
@@ -251,8 +257,111 @@ class _HomePageState extends State<HomePage> {
               ),
 
               // Output Part
+              SizedBox(height: 10),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: outputColor,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        outputLanguage.name,
+                        style: GoogleFonts.barlow(
+                          color: greyTextColor,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          output,
+                          style: GoogleFonts.barlow(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+
+                      /// Display 3 buttons
+                      Row(
+                        children: [
+                          CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              FlutterClipboard.copy(output);
+                            },
+                            child: Image.asset(
+                              "assets/copy.png",
+                              height: 30,
+                              width: 30,
+                            ),
+                          ),
+                          CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              Share.share("🌍 Translation 🌍\n\n"
+                                  "🔹 From: ${inputLanguage.name}\n"
+                                  "📝 ${inputController.text}\n\n"
+                                  "🔹 To: ${outputLanguage.name}\n"
+                                  "🗣️ $output\n\n"
+                                  "📲 Shared via D4 Translator App");
+                            },
+                            child: Image.asset(
+                              "assets/share.png",
+                              height: 30,
+                              width: 30,
+                            ),
+                          ),
+                          Spacer(),
+                          CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              FlutterTts tts = FlutterTts();
+                              tts.stop();
+                              tts.setLanguage(outputLanguage.locale);
+                              tts.speak(output);
+                            },
+                            child: Image.asset(
+                              "assets/speaker.png",
+                              height: 30,
+                              width: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
               // Button
+              SizedBox(height: 10),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: buttonColor,
+                  fixedSize: Size.fromHeight(55),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+                onPressed: () {},
+                child: Center(
+                  child: Text(
+                    "Translate",
+                    style: GoogleFonts.barlow(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: whiteColor,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
             ],
           ),
         ),
